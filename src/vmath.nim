@@ -1584,18 +1584,18 @@ proc lookAt*[T](eye, center, up: GVec3[T]): GMat4[T] =
   let s = normalize(cross(f, up))
   let u = cross(s, f)
 
-  result[0][0] = s.x
-  result[1][0] = s.y
-  result[2][0] = s.z
-  result[0][1] = u.x
-  result[1][1] = u.y
-  result[2][1] = u.z
-  result[0][2] = -f.x
-  result[1][2] = -f.y
-  result[2][2] = -f.z
-  result[3][0] = -dot(s, eye)
-  result[3][1] = -dot(u, eye)
-  result[3][2] = dot(f, eye)
+  result[0, 0] = s.x
+  result[1, 0] = s.y
+  result[2, 0] = s.z
+  result[0, 1] = u.x
+  result[1, 1] = u.y
+  result[2, 1] = u.z
+  result[0, 2] = -f.x
+  result[1, 2] = -f.y
+  result[2, 2] = -f.z
+  result[3, 0] = -dot(s, eye)
+  result[3, 1] = -dot(u, eye)
+  result[3, 2] = dot(f, eye)
 
 proc angle*[T](a: GVec2[T]): T =
   ## Angle of a Vec2.
