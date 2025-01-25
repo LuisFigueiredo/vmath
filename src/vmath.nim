@@ -1579,7 +1579,7 @@ proc ortho*[T](left, right, bottom, top, near, far: T): GMat4[T] =
 #   lookAt(eye, center, gvec3(T(0), 0, 1))
 
 # same implementation as glm RH
-proc lookAt*[T](eye, center: GVec3[T]): GMat4[T] =
+proc lookAt*[T](eye, center, up: GVec3[T]): GMat4[T] =
   let f = normalize(center - eye)
   let s = normalize(cross(f, up))
   let u = cross(s, f)
