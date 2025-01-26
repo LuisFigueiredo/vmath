@@ -1487,97 +1487,6 @@ proc ortho*[T](left, right, bottom, top, near, far: T): GMat4[T] =
   result[3, 2] = T(-(far + near) / fn)
   result[3, 3] = 1
 
-# proc lookAt*[T](eye, center, up: GVec3[T]): GMat4[T]
-#   {.deprecated: "Wrong coordinate system. " &
-#     "Use toAngles(eye, center).fromAngles() instead to get " &
-#     "right-handed-z-forward coordinate system".} =
-#   ## Create a matrix that would convert eye pos to looking at center.
-#   let
-#     eyex = eye[0]
-#     eyey = eye[1]
-#     eyez = eye[2]
-#     upx = up[0]
-#     upy = up[1]
-#     upz = up[2]
-#     centerx = center[0]
-#     centery = center[1]
-#     centerz = center[2]
-
-#   if eyex == centerx and eyey == centery and eyez == centerz:
-#     return
-
-#   var
-#     # vec3.direction(eye, center, z)
-#     z0 = eyex - center[0]
-#     z1 = eyey - center[1]
-#     z2 = eyez - center[2]
-
-#   # normalize (no check needed for 0 because of early return)
-#   var len = 1 / sqrt(z0 * z0 + z1 * z1 + z2 * z2)
-#   z0 *= len
-#   z1 *= len
-#   z2 *= len
-
-#   var
-#     # vec3.normalize(vec3.cross(up, z, x))
-#     x0 = upy * z2 - upz * z1
-#     x1 = upz * z0 - upx * z2
-#     x2 = upx * z1 - upy * z0
-#   len = sqrt(x0 * x0 + x1 * x1 + x2 * x2)
-#   if len == 0:
-#     x0 = 0
-#     x1 = 0
-#     x2 = 0
-#   else:
-#     len = 1 / len
-#     x0 *= len
-#     x1 *= len
-#     x2 *= len
-
-#   var
-#     # vec3.normalize(vec3.cross(z, x, y))
-#     y0 = z1 * x2 - z2 * x1
-#     y1 = z2 * x0 - z0 * x2
-#     y2 = z0 * x1 - z1 * x0
-
-#   len = sqrt(y0 * y0 + y1 * y1 + y2 * y2)
-#   if len == 0:
-#     y0 = 0
-#     y1 = 0
-#     y2 = 0
-#   else:
-#     len = 1/len
-#     y0 *= len
-#     y1 *= len
-#     y2 *= len
-
-#   result[0, 0] = x0
-#   result[0, 1] = y0
-#   result[0, 2] = z0
-#   result[0, 3] = 0
-
-#   result[1, 0] = x1
-#   result[1, 1] = y1
-#   result[1, 2] = z1
-#   result[1, 3] = 0
-
-#   result[2, 0] = x2
-#   result[2, 1] = y2
-#   result[2, 2] = z2
-#   result[2, 3] = 0
-
-#   result[3, 0] = -(x0 * eyex + x1 * eyey + x2 * eyez)
-#   result[3, 1] = -(y0 * eyex + y1 * eyey + y2 * eyez)
-#   result[3, 2] = -(z0 * eyex + z1 * eyey + z2 * eyez)
-#   result[3, 3] = 1
-
-# proc lookAt*[T](eye, center: GVec3[T]): GMat4[T]
-#   {.deprecated: "Wrong coordinate system. " &
-#     "Use toAngles(eye, center).fromAngles() instead to get " &
-#     "right-handed-z-forward coordinate system".} =
-#   ## Look center from eye with default UP vector.
-#   lookAt(eye, center, gvec3(T(0), 0, 1))
-
 # same implementation as glm RH
 proc lookAt*[T](eye, center, up: GVec3[T]): GMat4[T] =
   let f = normalize(center - eye)
@@ -1596,6 +1505,7 @@ proc lookAt*[T](eye, center, up: GVec3[T]): GMat4[T] =
   result[3, 0] = -dot(s, eye)
   result[3, 1] = -dot(u, eye)
   result[3, 2] = dot(f, eye)
+  result[3, 3] = 1f
 
 proc angle*[T](a: GVec2[T]): T =
   ## Angle of a Vec2.
