@@ -1676,6 +1676,28 @@ proc nlerp*(a: Quat, b: Quat, v: float32): Quat =
   else:
     (a * (1.0 - v) + b * v).normalize()
 
+proc slerp*(a, b: Quat, v: float32): Quat =
+  var c = b
+  var cosTheta = dot(a, b)
+  # If cosTheta < 0, the interpolation will take the long way around the sphere
+  # To fix this, one quat must be negated
+  if cosTheta < 0:
+    c = -b
+    cosTheta = -cosTheta
+
+  # Perform a linear interpolation when cosTheta is close to 1 to
+  # avoid side effect of sin(angle) becoming a zero denominator
+  if cosTheta ~= 1:
+    return quat(mix(a.x, c.x, v),
+                mix(a.y, c.y, v),
+                mix(a.z, c.z, v),
+                mix(a.w, c.w, v))
+  else:
+    let angle = arccos(cosTheta)
+    let deltaA = sin((1 - v) * angle)
+    let deltaB = sin(v * angle)
+    return (deltaA * a + deltaB * c) / sin(angle)
+
 proc quat*[T](m: GMat4[T]): GVec4[T] =
   ## Create a quaternion from matrix.
   let
